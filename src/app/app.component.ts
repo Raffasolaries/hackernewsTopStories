@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { 
+  Router, NavigationStart, NavigationCancel, NavigationEnd 
+} from '@angular/router';
 
 import { HackernewsService } from './services/hackernews.service';
 
@@ -21,6 +24,8 @@ export interface Tile {
 })
 export class AppComponent implements OnInit {
   title = 'hackernewsTopStories';
+  loading: boolean;
+  mode = 'indeterminate';
   panelOpenState = false;
   tops = [];
   tiles: Tile[] = [
@@ -35,37 +40,55 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.loading = true;
     this.hackernews.getTopStories().subscribe(codes => {
-      console.log('stories', codes)
       let index = 0;
       codes.forEach(code => {
         this.hackernews.getStoryDetails(code).subscribe(story => {
           console.log('story', story)
           index += 1;
-          // this.hackernews.getUrlContent(story.url).subscribe(html => {
-            this.tiles.push({
+          let tile = [
+            {
               content: false,
               cols: 1,
               rows: 1
-            });
-            this.tiles.push({
+            }, {
               content: true,
-              cols: 4,
+              cols: 10,
               rows: 1,
               index: index,
               by: story.by,
               title: story.title,
               url: story.url
-            });
-            this.tiles.push({
+            }, {
               content: false,
               cols: 1,
               rows: 1
-            });
+            }
+          ]
+          Array.prototype.push.apply(this.tiles, tile);
+          if (codes.length*3 === this.tiles.length) 
+            this.loading = false;
+          console.log('codes length', codes.length, 'tiles length', this.tiles.length)
         })
       })
     })
   }
+
+  /* ngAfterViewInit() {
+    this.router.events
+      .subscribe((event) => {
+          if(event instanceof NavigationStart) {
+            this.loading = true;
+          }
+          else if (
+            event instanceof NavigationEnd || 
+            event instanceof NavigationCancel
+            ) {
+            this.loading = false;
+          }
+      });
+  } */
 
 
 }

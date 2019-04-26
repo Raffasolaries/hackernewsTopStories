@@ -1,41 +1,49 @@
 
-<mat-card class="card-container">
-  <mat-card-header class="card-header">
-    <mat-card-title><h1>Welcome to the HackerNews Top Stories</h1></mat-card-title>
-    <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-  </mat-card-header>
-  <mat-card-content>
-    <mat-grid-list cols="6" rowHeight="2:1">
-      <mat-grid-tile
-        *ngFor="let tile of tiles"
-        [colspan]="tile.cols"
-        [rowspan]="tile.rows">
-        <div *ngIf="tile.content">
-          <mat-accordion>
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  {{tile.index}}. &nbsp; {{tile.title}}
-                </mat-panel-title>
-                <mat-panel-description>
-                  by {{tile.by}}
-                </mat-panel-description>
-              </mat-expansion-panel-header>
-              <a href="{{tile.url}}">{{tile.url}}</a>
-              <!-- <mat-form-field>
-                <input matInput placeholder="First name">
-              </mat-form-field>
-          
-              <mat-form-field>
-                <input matInput placeholder="Age">
-              </mat-form-field> -->
-            </mat-expansion-panel>
-          </mat-accordion>
-        </div>
-      </mat-grid-tile>
-    </mat-grid-list>
-  </mat-card-content>
-</mat-card>
+<section *ngIf="loading" class="tp-section">
+  <mat-progress-spinner
+     class="tp-margin"
+     [mode] = "mode">
+  </mat-progress-spinner>
+</section>
+<div *ngIf="!loading">
+  <mat-card class="card-container">
+    <mat-card-header class="card-header">
+      <mat-card-title><h1>Welcome to the HackerNews Top Stories</h1></mat-card-title>
+      <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+    </mat-card-header>
+    <mat-card-content>
+      <mat-grid-list cols="12" rowHeight="1:1.5">
+        <mat-grid-tile
+          *ngFor="let tile of tiles"
+          [colspan]="tile.cols"
+          [rowspan]="tile.rows">
+          <div *ngIf="tile.content">
+            <mat-accordion>
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{tile.index}}. &nbsp; {{tile.title}}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    by {{tile.by}}
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <a href="{{tile.url}}">{{tile.url}}</a>
+                <!-- <mat-form-field>
+                  <input matInput placeholder="First name">
+                </mat-form-field>
+            
+                <mat-form-field>
+                  <input matInput placeholder="Age">
+                </mat-form-field> -->
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card-content>
+  </mat-card>
+</div>
 
   
 
