@@ -5,10 +5,10 @@
      [mode] = "mode">
   </mat-progress-spinner>
 </section>
-<div *ngIf="!loading">
+<div [hidden]="loading">
   <mat-card class="card-container">
     <mat-card-header class="card-header">
-      <mat-card-title><h1>Welcome to the HackerNews Top Stories</h1></mat-card-title>
+      <mat-card-title><h1>Welcome to {{title}}</h1></mat-card-title>
       <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
     </mat-card-header>
     <mat-card-content>
@@ -28,14 +28,10 @@
                     by {{tile.by}}
                   </mat-panel-description>
                 </mat-expansion-panel-header>
-                <a href="{{tile.url}}">{{tile.url}}</a>
-                <!-- <mat-form-field>
-                  <input matInput placeholder="First name">
-                </mat-form-field>
-            
-                <mat-form-field>
-                  <input matInput placeholder="Age">
-                </mat-form-field> -->
+                <div class="mat-expansion-panel-content">
+                  <a href="{{tile.url}}">{{tile.url}}</a>
+                  {{tile.description}}
+                </div>
               </mat-expansion-panel>
             </mat-accordion>
           </div>
@@ -44,6 +40,7 @@
     </mat-card-content>
   </mat-card>
 </div>
+
 
   
 

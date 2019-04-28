@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { 
   Router, NavigationStart, NavigationCancel, NavigationEnd 
 } from '@angular/router';
@@ -15,6 +15,7 @@ export interface Tile {
   url?: string;
   index?: number;
   html?: string;
+  description?: string;
 }
 
 @Component({
@@ -23,17 +24,13 @@ export interface Tile {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'hackernewsTopStories';
+  title = 'the HackerNews Top Stories';
   loading: boolean;
   mode = 'indeterminate';
   panelOpenState = false;
   tops = [];
-  tiles: Tile[] = [
-    /* {text: 'One', cols: 3, rows: 1, color: 'lightblue'},
-    {text: 'Two', cols: 1, rows: 2, color: 'lightgreen'},
-    {text: 'Three', cols: 1, rows: 1, color: 'lightpink'},
-    {text: 'Four', cols: 2, rows: 1, color: '#DDBDF1'}, */
-  ];
+  tiles: Tile[] = [];
+  description: string;
 
   constructor (
     private hackernews: HackernewsService
@@ -41,54 +38,48 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
+    this.hackernews.getUrlContent('https://engineering.mixpanel.com/2011/08/05/how-and-why-we-switched-from-erlang-to-python/')
+      .subscribe(urlCont => { 
+        this.description = urlCont.description;
+        console.log('description', this.description);
+      });
     this.hackernews.getTopStories().subscribe(codes => {
       let index = 0;
       codes.forEach(code => {
         this.hackernews.getStoryDetails(code).subscribe(story => {
-          console.log('story', story)
-          index += 1;
-          let tile = [
-            {
-              content: false,
-              cols: 1,
-              rows: 1
-            }, {
-              content: true,
-              cols: 10,
-              rows: 1,
-              index: index,
-              by: story.by,
-              title: story.title,
-              url: story.url
-            }, {
-              content: false,
-              cols: 1,
-              rows: 1
-            }
-          ]
-          Array.prototype.push.apply(this.tiles, tile);
-          if (codes.length*3 === this.tiles.length) 
-            this.loading = false;
-          console.log('codes length', codes.length, 'tiles length', this.tiles.length)
+          /* this.hackernews.getUrlContent(story.url).subscribe(urlCont => {
+            let cont = '';
+            if ('description' in urlCont) cont = urlCont.description;
+            else cont = urlCont; */
+            index += 1;
+            let tile = [
+              {
+                content: false,
+                cols: 1,
+                rows: 1
+              }, {
+                content: true,
+                cols: 10,
+                rows: 1,
+                index: index,
+                by: story.by,
+                title: story.title,
+                url: story.url
+                // description: cont
+              }, {
+                content: false,
+                cols: 1,
+                rows: 1
+              }
+            ]
+            Array.prototype.push.apply(this.tiles, tile);
+            if (codes.length*3 === this.tiles.length) 
+              this.loading = false;
+            console.log('codes length', codes.length, 'tiles length', this.tiles.length)
+          // })
         })
       })
     })
   }
-
-  /* ngAfterViewInit() {
-    this.router.events
-      .subscribe((event) => {
-          if(event instanceof NavigationStart) {
-            this.loading = true;
-          }
-          else if (
-            event instanceof NavigationEnd || 
-            event instanceof NavigationCancel
-            ) {
-            this.loading = false;
-          }
-      });
-  } */
-
 
 }

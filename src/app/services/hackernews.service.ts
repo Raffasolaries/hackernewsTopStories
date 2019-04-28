@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
@@ -25,8 +25,17 @@ export class HackernewsService {
   }
 
   getUrlContent(url) {
-    return this.http.get<any>(url)
+    return this.http.get<any>(/* 'http://api.linkpreview.net/' */url, {
+      /* params: new HttpParams()
+        .set('key', '5cc5f2352b4961d7944598827fac015ee561af34dd0b4')
+        .set('q', url) */
+    })
       .pipe(
+        /* map(res => {
+          if(res.status < 200 || res.status >= 300) {
+            return "Link preview too many requests";
+          } else return res;
+        }) */
         catchError(this.handleError<any>(`get url error`))
       );
   }
